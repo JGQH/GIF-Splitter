@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QFileDialog
+from PIL import Image
+from os import path
 import sys
 
 class MainWindow(QMainWindow):
@@ -11,18 +13,22 @@ class MainWindow(QMainWindow):
 
     def setup(self):
         lblSearch = QLabel(self)
-        lblSearch.move(10, 10)
+        lblSearch.move(10, 12)
         lblSearch.resize(60, 20)
         lblSearch.setText("Search GIF:")
 
         btnSearch = QPushButton(self)
         btnSearch.move(75, 10)
-        btnSearch.resize(100, 20)
+        btnSearch.resize(100, 25)
         btnSearch.setText("Search")
 
         def searchGif():
-            print("Searching GIF...")
-            pass
+            location = QFileDialog.getOpenFileName(None, "Open GIF file", "D:\\", "GIF files (*.gif)")[0]
+            if(location == ""): return
+
+            self.raw_gif = Image.open(location)
+            btnSearch.setText("[%s]" % path.basename(location))
+
         btnSearch.clicked.connect(searchGif)
 
 if __name__ == "__main__":
